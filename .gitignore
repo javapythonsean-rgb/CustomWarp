@@ -1,0 +1,20 @@
+# Build output — the compiled plugin is hosted on SpaceDock, not the source repo
+GameData/CustomWarp/Plugins/*.dll
+
+# Runtime-generated user settings
+GameData/CustomWarp/PluginData/*.cfg
+
+# Release archives
+*.zip
+
+# Build intermediates
+bin/
+obj/
+
+# Windows / editor cruft
+Thumbs.db
+desktop.ini
+.vs/
+*.user
+*.suo
+*.bak*
