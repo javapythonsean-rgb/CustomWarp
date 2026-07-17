@@ -18,7 +18,7 @@ set KSP=
 if exist "%STEAM%\Kerbal Space Program\KSP_x64_Data\Managed\Assembly-CSharp.dll" set KSP=%STEAM%\Kerbal Space Program
 if "%KSP%"=="" if exist "%STEAM%\Kerbal Space Program-Current\KSP_x64_Data\Managed\Assembly-CSharp.dll" set KSP=%STEAM%\Kerbal Space Program-Current
 if "%KSP%"=="" (
-    echo ERROR: Could not find a KSP install under %STEAM%.
+    echo ERROR: Could not find a KSP install under "%STEAM%".
     echo Edit build.bat and set KSP= to your Kerbal Space Program folder.
     pause
     exit /b 1

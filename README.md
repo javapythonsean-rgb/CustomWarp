@@ -1,59 +1,42 @@
 # Custom Warp
 
-Set your own **on-rails time-warp multipliers** in Kerbal Space Program — edited live, in-game, no config wrangling.
+Custom Warp lets you edit all eight of KSP's on-rails time-warp multipliers
+from a small in-game window.
 
-**KSP 1.12.x · No dependencies · ~10 KB**
+## Features
 
----
+- Change any of the eight warp slots while in flight.
+- Save custom rates to `GameData/CustomWarp/PluginData/warp.cfg`.
+- Reapply saved rates whenever the flight scene loads.
+- Keep the stock warp-selector labels synchronized with the real rates.
+- Reload the config or reset every slot to stock from the same window.
 
-## What it does
-
-- Replaces the eight stock on-rails warp steps (`1× 5× 10× 50× 100× 1000× 10000× 100000×`) with values **you** choose.
-- Edit them **live in flight** — no file editing, no restart.
-- **Relabels the stock time-warp indicator** so it shows your real multipliers, not the stock ones.
-- **Saves** your rates and re-applies them on every scene load.
-- Leaves stock **altitude limits** untouched, so on-rails warp stays safe at low altitude.
-
-Physics (sub-light) warp is **not** modified — this mod only touches high (on-rails) warp.
+Press **Alt+F8** in flight to open or close the editor. Enter multipliers using
+a period as the decimal separator, then click **Apply**.
 
 ## Install
 
-**Manual:** copy the `GameData` folder from the download into your KSP install root, merging with the existing `GameData`. When done you should have:
+Copy `GameData/CustomWarp` from this ZIP into KSP's `GameData` folder. The
+installed DLL should be at:
 
-```
-Kerbal Space Program/GameData/CustomWarp/Plugins/CustomWarp.dll
-```
+`Kerbal Space Program/GameData/CustomWarp/Plugins/CustomWarp.dll`
 
-**CKAN:** once the mod is indexed, `ckan install CustomWarp`.
+No dependencies are required. Custom Warp supports KSP 1.12.x.
 
-## Usage
+## Notes
 
-1. Enter flight (or any scene with time warp).
-2. Click the on-screen button that appears by the time-warp control (or press the toggle hotkey) to open **Custom Warp**.
-3. Type a multiplier into any of the eight slots. Slot 0 is normally kept at `1×`.
-4. **Apply & Save** — rates take effect immediately and persist across sessions.
-5. **Restore stock rates** any time from the same window.
+- Slot 1 must be at least 1x.
+- KSP still enforces its normal altitude-based warp limits.
+- Very high rates can reduce orbital precision. Rates above roughly
+  10,000,000x are not recommended.
+- Removing the mod restores stock behavior the next time KSP starts.
 
-## Config
+## Uninstall
 
-Your rates are stored as plain text, one multiplier per line:
+Delete `GameData/CustomWarp`.
 
-```
-GameData/CustomWarp/PluginData/warp.cfg
-```
+## Source and license
 
-Delete that file to fall back to the stock rates.
-
-## Compatibility
-
-- KSP **1.12.x** (built and tested on 1.12.5).
-- No dependencies.
-- Safe to add to, or remove from, an existing save.
-
-## License
-
-Released under the [MIT License](LICENSE).
-
-## Author
-
-javap
+Source is included in the ZIP under `Source/` and published at
+https://github.com/javapythonsean-rgb/CustomWarp. Custom Warp is released
+under the MIT License; see `LICENSE.txt`.

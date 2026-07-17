@@ -1,13 +1,11 @@
 {
-    "spec_version": "v1.4",
+    "spec_version": "v1.27",
     "identifier": "CustomWarp",
-    "$kref": "#/ckan/spacedock/4374",
+    "name": "Custom Warp",
+    "abstract": "Edit all eight on-rails time-warp multipliers from an in-game window.",
+    "author": "javap",
     "license": "MIT",
-    "install": [
-        {
-            "find": "CustomWarp",
-            "install_to": "GameData"
-        }
-    ],
-    "x_via": "Initial release"
+    "$kref": "#/ckan/spacedock/4374",
+    "$vref": "#/ckan/ksp-avc",
+    "tags": [ "plugin", "convenience" ]
 }

@@ -1,6 +1,13 @@
 using UnityEngine;
 using System.IO;
 using System.Globalization;
+using System.Reflection;
+
+[assembly: AssemblyTitle("CustomWarp")]
+[assembly: AssemblyDescription("Edit KSP's eight on-rails time-warp multipliers in flight.")]
+[assembly: AssemblyVersion("1.1.0")]
+[assembly: AssemblyFileVersion("1.1.0")]
+[assembly: KSPAssembly("CustomWarp", 1, 1)]
 
 namespace CustomWarp
 {
@@ -89,7 +96,7 @@ namespace CustomWarp
             if (Event.current == null) return;
 
             Rect hoverStrip = new Rect(0f, 0f, 430f, 48f);          // covers WARP row + MET row
-            Rect btnRect = new Rect(8f, 48f, BtnW, BtnH);           // just beneath the readout
+            Rect btnRect = new Rect(8f, 52f, BtnW, BtnH);           // just beneath the readout
 
             Vector2 m = Event.current.mousePosition;
             if (hoverStrip.Contains(m) || btnRect.Contains(m))
