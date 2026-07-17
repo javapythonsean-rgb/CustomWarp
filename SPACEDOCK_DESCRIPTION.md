@@ -5,16 +5,19 @@ flight, enter the multipliers you want, and apply them without leaving the
 game.
 
 Custom Warp saves the rates to its own config file and reapplies them whenever
-the flight scene loads. Version 1.1.0 also keeps KSP's stock warp-selector
-labels synchronized with the actual custom multipliers, including after the
-flight UI is rebuilt.
+the flight scene loads. Version 1.1.1 validates the complete table before it
+changes KSP, rejects unsafe or non-increasing values, ignores invalid saved
+configs without partially applying them, and supports either Alt key.
+Version 1.1.0 also keeps KSP's stock warp-selector labels synchronized with
+the actual custom multipliers, including after the flight UI is rebuilt.
 
 The window can reload rates from disk or reset all eight slots to stock. KSP's
 normal altitude-based warp limits are left intact, and no dependencies are
 required.
 
-**KSP:** 1.12.x  
+**KSP:** 1.12.x
 **License:** MIT
+**Source:** https://github.com/javapythonsean-rgb/CustomWarp
 
 Copy `GameData/CustomWarp` into KSP's `GameData` folder. Full source, README,
 changelog, license, KSP-AVC version metadata, and CKAN metadata are included

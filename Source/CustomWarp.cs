@@ -5,8 +5,8 @@ using System.Reflection;
 
 [assembly: AssemblyTitle("CustomWarp")]
 [assembly: AssemblyDescription("Edit KSP's eight on-rails time-warp multipliers in flight.")]
-[assembly: AssemblyVersion("1.1.0")]
-[assembly: AssemblyFileVersion("1.1.0")]
+[assembly: AssemblyVersion("1.1.1")]
+[assembly: AssemblyFileVersion("1.1.1")]
 [assembly: KSPAssembly("CustomWarp", 1, 1)]
 
 namespace CustomWarp
@@ -25,6 +25,7 @@ namespace CustomWarp
             new float[] { 1f, 5f, 10f, 50f, 100f, 1000f, 10000f, 100000f };
 
         private const int SLOT_COUNT = 8;
+        private const float MAX_RATE = 10000000f;
 
         private bool showUI;
         private Rect windowRect = new Rect(140, 140, 360, 0);
@@ -69,7 +70,9 @@ namespace CustomWarp
             // If TimeWarp wasn't ready during Start, keep trying until it is.
             if (!appliedFromConfig) TryApplyConfig();
 
-            if (Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyDown(toggleKey))
+            bool altDown = Input.GetKey(KeyCode.LeftAlt)
+                || Input.GetKey(KeyCode.RightAlt);
+            if (altDown && Input.GetKeyDown(toggleKey))
             {
                 showUI = !showUI;
                 if (showUI) RefreshInputsFromRates();
@@ -131,9 +134,9 @@ namespace CustomWarp
             if (GUILayout.Button("Reload from file"))
             {
                 appliedFromConfig = false;
+                status = "";
                 TryApplyConfig();
                 RefreshInputsFromRates();
-                status = "Reloaded.";
             }
             if (GUILayout.Button("Reset to stock"))
             {
@@ -170,19 +173,64 @@ namespace CustomWarp
         void ApplyFromInputs(bool saveAfter)
         {
             if (!RatesReady()) { status = "Warp system not ready yet."; return; }
-            int applied = 0;
-            for (int i = 0; i < SLOT_COUNT && i < TimeWarp.fetch.warpRates.Length; i++)
+            int count = Mathf.Min(SLOT_COUNT, TimeWarp.fetch.warpRates.Length);
+            float[] parsed;
+            string error;
+            if (!TryParseRates(inputs, count, out parsed, out error))
             {
-                float v;
-                if (float.TryParse(inputs[i], NumberStyles.Float, Inv, out v) && v >= 1f)
-                {
-                    TimeWarp.fetch.warpRates[i] = v;
-                    applied++;
-                }
+                status = error;
+                return;
             }
-            status = "Applied " + applied + " rate(s).";
+
+            // Apply transactionally: either the complete table is valid or
+            // the live KSP rates remain untouched.
+            for (int i = 0; i < count; i++)
+                TimeWarp.fetch.warpRates[i] = parsed[i];
+
+            status = "Applied " + count + " rate(s).";
             if (saveAfter) SaveRatesToConfig();
             UpdateWarpUiLabels(true);
+        }
+
+        static bool TryParseRates(string[] raw, int count,
+            out float[] values, out string error)
+        {
+            values = null;
+            error = "";
+            if (raw == null || raw.Length < count)
+            {
+                error = "Enter all " + count + " warp rates.";
+                return false;
+            }
+
+            float[] parsed = new float[count];
+            for (int i = 0; i < count; i++)
+            {
+                string text = raw[i] == null ? "" : raw[i].Trim();
+                float value;
+                if (!float.TryParse(text, NumberStyles.Float, Inv, out value)
+                    || float.IsNaN(value) || float.IsInfinity(value))
+                {
+                    error = "Slot " + (i + 1) + " is not a valid number.";
+                    return false;
+                }
+                if (value < 1f || value > MAX_RATE)
+                {
+                    error = "Slot " + (i + 1)
+                        + " must be between 1x and 10,000,000x.";
+                    return false;
+                }
+                if (i > 0 && value <= parsed[i - 1])
+                {
+                    error = "Slot " + (i + 1)
+                        + " must be greater than slot " + i + ".";
+                    return false;
+                }
+                parsed[i] = value;
+            }
+
+            values = parsed;
+            return true;
         }
 
         // The on-screen warp multiplier ("x5", "x1,000", ...) is NOT read live from
@@ -292,12 +340,21 @@ namespace CustomWarp
             try
             {
                 string[] lines = File.ReadAllLines(configPath);
-                for (int i = 0; i < lines.Length && i < SLOT_COUNT && i < TimeWarp.fetch.warpRates.Length; i++)
+                int count = Mathf.Min(SLOT_COUNT,
+                    TimeWarp.fetch.warpRates.Length);
+                float[] parsed;
+                string error;
+                if (!TryParseRates(lines, count, out parsed, out error))
                 {
-                    float v;
-                    if (float.TryParse(lines[i].Trim(), NumberStyles.Float, Inv, out v) && v >= 1f)
-                        TimeWarp.fetch.warpRates[i] = v;
+                    status = "Config ignored: " + error;
+                    Debug.LogWarning("[CustomWarp] " + status);
+                    return;
                 }
+
+                for (int i = 0; i < count; i++)
+                    TimeWarp.fetch.warpRates[i] = parsed[i];
+
+                status = "Loaded " + count + " rate(s) from file.";
                 UpdateWarpUiLabels(false);   // keep the on-screen labels in sync
                                              // (the rate-changed hook also re-asserts
                                              // them once the UI exists)

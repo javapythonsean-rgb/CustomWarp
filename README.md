@@ -11,8 +11,9 @@ from a small in-game window.
 - Keep the stock warp-selector labels synchronized with the real rates.
 - Reload the config or reset every slot to stock from the same window.
 
-Press **Alt+F8** in flight to open or close the editor. Enter multipliers using
-a period as the decimal separator, then click **Apply**.
+Press **Alt+F8** in flight to open or close the editor; either Alt key works.
+Enter multipliers using a period as the decimal separator, then click
+**Apply**. All eight values are validated before any live rate changes.
 
 ## Install
 
@@ -25,10 +26,9 @@ No dependencies are required. Custom Warp supports KSP 1.12.x.
 
 ## Notes
 
-- Slot 1 must be at least 1x.
+- Rates must be strictly increasing and between 1x and 10,000,000x.
 - KSP still enforces its normal altitude-based warp limits.
-- Very high rates can reduce orbital precision. Rates above roughly
-  10,000,000x are not recommended.
+- Very high rates can reduce orbital precision.
 - Removing the mod restores stock behavior the next time KSP starts.
 
 ## Uninstall
